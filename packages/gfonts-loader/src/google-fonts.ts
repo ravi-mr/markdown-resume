@@ -1,5 +1,6 @@
 import { Font, Variant, Subset } from "./types";
 import { hasStylesheet, createStylesheet } from "./stylesheets";
+import popularFonts from "./popular-fonts";
 
 const GOOGLE_FONTS_API = "https://www.googleapis.com/webfonts/v1/webfonts";
 const GOOGLE_FONTS_CSS = "https://fonts.googleapis.com/css";
@@ -46,15 +47,20 @@ const getFontId = (fontFamily: string): string => {
   return fontFamily.replace(/\s+/g, "-").toLowerCase();
 };
 
-export const loadFontList = async (apiKey: string): Promise<Font[]> => {
-  // Request list of all Google Fonts, sorted by popularity
-  const url = new URL(GOOGLE_FONTS_API);
+export const loadFontList = async (apiKey?: string): Promise<Font[]> => {
+  let fonts;
+  if (apiKey) {
+    // Request list of all Google Fonts, sorted by popularity
+    const url = new URL(GOOGLE_FONTS_API);
 
-  url.searchParams.append("sort", "popularity");
-  url.searchParams.append("key", apiKey);
+    url.searchParams.append("sort", "popularity");
+    url.searchParams.append("key", apiKey);
 
-  const response = await get(url.href);
-  const fonts = JSON.parse(response).items;
+    const response = await get(url.href);
+    fonts = JSON.parse(response).items;
+  } else {
+    fonts = popularFonts.items;
+  }
 
   // Generate fontId for each font
   return fonts.map((font: Font): Font => {

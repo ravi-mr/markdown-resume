@@ -15,11 +15,14 @@ export const googleFontsLoader = async () => {
   const config = useRuntimeConfig();
   const key = config.public.googleFontsKey;
 
-  if (!gLoader && key !== "") {
-    gLoader = new GoogleFontsLoader(key, {
-      variants: ["regular", "700"],
-      filter: (font: GoogleFont) => !IGNORE_FONTS.includes(font.family)
-    });
+  if (!gLoader) {
+    gLoader = new GoogleFontsLoader(
+      {
+        variants: ["regular", "700"],
+        filter: (font: GoogleFont) => !IGNORE_FONTS.includes(font.family)
+      },
+      key
+    );
     await gLoader.init();
   }
 
@@ -45,6 +48,7 @@ export const getGoogleFonts = async () => {
     };
 
   const gfonts = loader.getFontMap();
+  console.log("gfonts", gfonts);
   const gfonts_en = [] as GoogleFont[],
     gfonts_cjk = [] as GoogleFont[];
 

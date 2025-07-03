@@ -9,7 +9,6 @@ export class GoogleFontsLoader {
   private fontMap: FontMap = new Map<string, Font>(); // Map from font families to font objects
 
   constructor(
-    apiKey: string,
     {
       families = [],
       categories = [],
@@ -19,10 +18,10 @@ export class GoogleFontsLoader {
       limit = -1,
       sort = "alphabet"
     }: Options = {},
-
+    apiKey?: string,
     onChange: (font: Font) => void = (): void => {}
   ) {
-    this.apiKey = apiKey;
+    this.apiKey = apiKey || "";
     this.options = {
       families,
       categories,
